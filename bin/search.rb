@@ -7,5 +7,5 @@ require 'snake-cube/search'
 
 SNAKE = [2, 1, 2, 1, 1, 3, 1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 2, 3, 1, 1, 1, 3, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1]
 
-search = SnakeCube::Search.new(SNAKE, 4)
-puts search.search
+search = SnakeCube::Search.new(SNAKE.reverse, 4, 7)
+p search.search

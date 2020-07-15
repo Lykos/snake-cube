@@ -12,7 +12,8 @@ module SnakeCube
     def coordinate_inside?(coordinate)
       raise TypeError unless coordinate.is_a?(Coordinate)
       raise ArgumentError unless coordinate.dimension == @dimension
-      coordinate.coords.max < @size
+
+      coordinate.coords.min >= 0 && coordinate.coords.max < @size
     end
 
     def coordinate_index(coordinate)

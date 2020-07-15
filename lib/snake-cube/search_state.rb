@@ -9,6 +9,8 @@ module SnakeCube
 
     class InitialStep < SearchStep
       def initialize(initial_coordinate)
+        raise TypeError unless initial_coordinate.is_a?(Coordinate)
+
         @initial_coordinate = initial_coordinate
       end
 
@@ -27,10 +29,19 @@ module SnakeCube
       def unapply!(cube_state)
         cube_state.free!(@initial_coordinate)
       end
+
+      def to_s
+        @initial_coordinate.to_s
+      end
     end
 
     class MoveStep < SearchStep
       def initialize(previous_coordinate, direction, length)
+        raise TypeError unless previous_coordinate.is_a?(Coordinate)
+        raise TypeError unless direction.is_a?(Direction)
+        raise TypeError unless length.is_a?(Integer)
+        raise ArgumentError unless length > 0
+
         @previous_coordinate = previous_coordinate
         @direction = direction
         @length = length
@@ -39,19 +50,23 @@ module SnakeCube
       attr_reader :direction
 
       def end_coordinate
-        @previous_coordinate + @direction * length
+        @previous_coordinate + @direction * @length
       end
 
       def apply!(cube_state)
-        (1..length).each do |factor|
-          cube_state.occupy!(@last_coordinate + direction * factor)
+        (1..@length).each do |factor|
+          cube_state.occupy!(@previous_coordinate + @direction * factor)
         end
       end
 
       def unapply!(cube_state)
-        (1..length).each do |factor|
-          cube_state.free!(@last_coordinate + direction * factor)
+        (1..@length).each do |factor|
+          cube_state.free!(@previous_coordinate + @direction * factor)
         end
+      end
+
+      def to_s
+        "-> #{@direction * @length}"
       end
     end
 
@@ -71,13 +86,14 @@ module SnakeCube
       raise if @step_stack.empty?
       directions = 
         @step_stack.last.direction ? @step_stack.last.direction.orthogonals : Direction.all(@dimension)
+      last_coordinate = @step_stack.last.end_coordinate
       valid_directions = directions.select do |direction|
-        @cube_state.coordinate_inside?(@last_coordinate + direction * length) && (1..length).all? do |factor|
-          !@cube_state.occupied?(@last_coordinate + direction * factor)
+        @cube_state.coordinate_inside?(last_coordinate + direction * length) && (1..length).all? do |factor|
+          !@cube_state.occupied?(last_coordinate + direction * factor)
         end
       end
       valid_directions.map do |direction|
-        MoveStep.new(@step_stack.last.end_coordinate, d, length)
+        MoveStep.new(@step_stack.last.end_coordinate, direction, length)
       end
     end
 
