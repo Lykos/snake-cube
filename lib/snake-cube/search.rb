@@ -25,6 +25,7 @@ module SnakeCube
         if snake_index + 1 == @snake.length
           unless @search_state.solved?
             puts "Found a solution #{@search_state.solution}, but it isn't really solved."
+            raise
           end
           return @search_state.solution
         end

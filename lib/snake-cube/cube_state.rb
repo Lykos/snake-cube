@@ -6,7 +6,7 @@ module SnakeCube
       @size = size
       @dimension = dimension
       @state_array = [false] * (size ** dimension)
-      @occupied = 1
+      @occupied = 0
     end
 
     def coordinate_inside?(coordinate)
