@@ -2,6 +2,9 @@ require_relative 'search_state'
 
 module SnakeCube
   class Search
+    # Solve time for 4x4x4 is ~1:11 for 5-7.
+    SOLVABLE_CHECK_BOUNDARY = 6
+    
     def initialize(snake, size, reporting_level=-1, dimension=3)
       raise TypeError unless size.is_a?(Integer)
       raise TypeError unless reporting_level.is_a?(Integer)
@@ -18,7 +21,7 @@ module SnakeCube
     end
 
     def solvable_check_worth_it?(snake_index)
-      snake_index + 6 < @snake.length
+      snake_index + SOLVABLE_CHECK_BOUNDARY < @snake.length
     end
 
     def search_internal(steps, snake_index)

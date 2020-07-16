@@ -30,12 +30,13 @@ module SnakeCube
       raise ArgumentError unless index >= 0 && index < @size ** @dimension
 
       a = [0] * @dimension
+      modified_index = index
       (@dimension - 1).downto(0) do |i|
-        a[i] = index % @size
-        index /= @size
+        a[i] = modified_index % @size
+        modified_index /= @size
          # Comment to make emacs formatting happy: /
       end
-      Coordinate.new(a.reverse)
+      Coordinate.new(a)
     end
 
     def neighbor_indices(index)
@@ -69,9 +70,6 @@ module SnakeCube
     # Does a moderately expensive check if there can still be a solution without backtracking
     # using some heuristics.
     def solvable?
-      return true
-
-      # TODO Make this work
       return true if full?
 
       state_array_copy = @state_array.dup
