@@ -112,11 +112,18 @@ module SnakeCube
       @cube_state.full?
     end
 
+    def num_occupied
+      @cube_state.num_occupied
+    end
+
     def solution
-      {
-        initial_coordinate: step_stack.first.end_coordinate,
-        steps: step_stack.map(&:direction)
-      }
+      ([@step_stack.first.end_coordinate.to_s] + @step_stack[1..-1].map(&:to_s)).join("\n")
+    end
+
+    # Does a moderately expensive check if there can still be a solution without backtracking
+    # using some heuristics.
+    def solvable?
+      @cube_state.solvable?
     end
   end
 end
